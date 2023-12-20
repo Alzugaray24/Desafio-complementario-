@@ -1,0 +1,16 @@
+<div class="row m-auto text-center justify-content-center">
+  <h1>productos</h1>
+  {{#each mostrarProductos}}
+    <div class="card m-2" style="width: 18rem;">
+      <img class="card-img-top" src={{thumbnail}} alt="Card image cap" />
+      <div class="card-body">
+        <h5 class="card-title">{{title}}</h5>
+        <p class="card-text">{{description}}</p>
+        <p class="card-text">$ {{price}}</p>
+      </div>
+    </div>
+  {{/each}}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/socket.io/socket.io.js"></script>

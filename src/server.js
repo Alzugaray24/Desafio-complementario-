@@ -8,6 +8,7 @@ import viewsRouter from "./routes/views.routes.js";
 import productRouter from "./routes/products.routes.js";
 import chatRouter from "./routes/chat.routes.js";
 import ChatDao from "./daos/dbManager/chat.dao.js";
+import cartsRouter from "./routes/carts.routes.js";
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -45,6 +46,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", viewsRouter);
 app.use("/api/products", productRouter);
 app.use("/api/chats", chatRouter);
+app.use("/api/carts", cartsRouter);
 
 const chat = new ChatDao()
 

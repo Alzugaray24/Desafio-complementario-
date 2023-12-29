@@ -1,31 +1,25 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card mt-5">
-        <div class="card-header bg-primary text-white text-center">
-          <h1>Carritos</h1>
-        </div>
-        <div class="card-body">
-          {{#if mostrarCarts.length}}
-            <ul class="list-group">
-              {{#each mostrarCarts}}
-                <li class="list-group-item">
-                  <h5>{{this.userId}}</h5>
-                  <p>Carrito ID: {{this._id}}</p>
-                  <p>Productos:</p>
-                  <ul>
-                    {{#each this.products}}
-                      <li>Cantidad: {{this.quantity}}</li>
-                    {{/each}}
-                  </ul>
-                </li>
-              {{/each}}
-            </ul>
-          {{else}}
-            <p>No hay carritos disponibles.</p>
-          {{/if}}
-        </div>
+<div class="container mt-5">
+  <h1>Lista de Carritos</h1>
+
+  {{#each mostrarCarts}}
+    <div class="card mt-3">
+      <div class="card-body">
+        <h5 class="card-title">Carrito {{this._id}}</h5>
+
+        <ul class="list-group">
+          {{#each this.products}}
+            <li class="list-group-item">
+              {{this.product.title}}
+              - Cantidad:
+              {{this.quantity}}
+            </li>
+          {{/each}}
+        </ul>
+
+        <a href="/api/carts/{{this._id}}" class="btn btn-primary mt-2">Ver
+          Detalles</a>
       </div>
     </div>
-  </div>
+  {{/each}}
+
 </div>

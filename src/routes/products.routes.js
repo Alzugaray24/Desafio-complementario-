@@ -4,15 +4,47 @@ import { Router } from "express"
 const productRouter = Router();
 const products = new productDao();
 
-productRouter.get("/", async(req,res)=> {
+productRouter.get("/", async (req, res) => {
     try {
-        const mostrarProductos = await products.getAllProducts();
-        res.render("products", {mostrarProductos})
+        const { limit, page, sort, query } = req.query;
+
+        const options = {
+            limit: parseInt(limit) || 10,
+            page: parseInt(page) || 1,
+            sort: sort || "asc",
+            query: query || "",
+        };
+
+        const result = await products.getAllProducts(options);
+
+        const totalPages = Math.ceil(result.totalItems / options.limit);
+        const hasPrevPage = options.page > 1;
+        const hasNextPage = options.page < totalPages;
+        const prevLink = hasPrevPage ? `/api/products?limit=${options.limit}&page=${options.page - 1}&sort=${options.sort}&query=${options.query}` : null;
+        const nextLink = hasNextPage ? `/api/products?limit=${options.limit}&page=${options.page + 1}&sort=${options.sort}&query=${options.query}` : null;
+
+        const response = {
+            status: "success",
+            payload: result.items,
+            totalPages,
+            prevPage: options.page - 1,
+            nextPage: options.page + 1,
+            page: options.page,
+            hasPrevPage,
+            hasNextPage,
+            prevLink,
+            nextLink,
+        };
+
+        console.log(response);
+
+        res.render("products", { response });
     } catch (error) {
         console.error("Error al obtener todos los productos:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).render("error", { error: "Internal Server Error" });
     }
-})
+});
+
 
 productRouter.post("/", async (req, res) => {
     try {

@@ -1,27 +1,61 @@
-import { productModel } from "../../models/products.model.js"
+import { productModel } from "../../models/products.model.js";
 
 class productDao {
-    constructor() { this.model = productModel }
+  constructor() {
+    this.model = productModel;
+  }
 
-    async getAllProducts() {
-        return await this.model.find().lean()
+  async getAllProducts(options) {
+    const { limit, page, category, availability, sort, query } = options;
+
+    console.log("Options:", options);
+
+    const filter = {};
+    if (category) {
+      filter.category = category;
+    }
+    if (availability !== undefined) {
+      filter.availability = availability;
+    }
+    if (query) {
+      filter.title = { $regex: query, $options: "i" };
     }
 
-    async getProductById(id) {
-        return await this.model.findById(id)
-    }
+    try {
+      const result = await this.model
+        .find(filter)
+        .sort({ price: sort === "asc" ? 1 : -1 })
+        .limit(limit)
+        .skip((page - 1) * limit)
+        .lean();
 
-    async createProduct(product) {
-        return await this.model.create(product)
-    }
+      const totalItems = await this.model.countDocuments(filter);
 
-    async updateProduct(id, product) {
-        return await this.model.findByIdAndUpdate(id, product)
+      return {
+        items: result,
+        totalItems,
+      };
+    } catch (error) {
+      console.error("Error en getAllProducts:", error);
+      throw error;
     }
+  }
 
-    async deleteProduct(id) {
-        return await this.model.findByIdAndDelete(id)
-    }
+  async getProductById(id) {
+    return await this.model.findById(id);
+  }
+
+  async createProduct(product) {
+    return await this.model.create(product);
+  }
+
+  async updateProduct(id, product) {
+    return await this.model.findByIdAndUpdate(id, product);
+  }
+
+  async deleteProduct(id) {
+    return await this.model.findByIdAndDelete(id);
+  }
 }
 
-export default productDao
+export default productDao;

@@ -1,6 +1,6 @@
 <div class="row m-auto text-center justify-content-center">
-  <h1>productos</h1>
-  {{#each mostrarProductos}}
+  <h1>Productos</h1>
+  {{#each response.payload}}
     <div class="card m-2" style="width: 18rem;">
       <img class="card-img-top" src={{thumbnail}} alt="Card image cap" />
       <div class="card-body">
@@ -12,5 +12,16 @@
   {{/each}}
 </div>
 
+<div class="pagination mt-4 text-center justify-content-center">
+  {{#if response.hasPrevPage}}
+    <a href="{{response.prevLink}}" class="btn btn-primary">&laquo; Página anterior</a>
+  {{/if}}
+  
+  <span class="mx-3">Página {{response.page}} de {{response.totalPages}}</span>
+
+  {{#if response.hasNextPage}}
+    <a href="{{response.nextLink}}" class="btn btn-primary">Página siguiente &raquo;</a>
+  {{/if}}
+</div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>

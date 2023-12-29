@@ -57,10 +57,8 @@ io.on("connection", (socket) => {
     try {
       const nuevoChat = await chat.addMessage(data);
 
-      // Convierte el objeto a un array de objetos
       const chatArray = Object.values(nuevoChat);
 
-      // Emite el nuevo chat al cliente
       socket.emit("nuevo_chat", chatArray);
     } catch (error) {
       console.error("Error al añadir mensaje:", error);
